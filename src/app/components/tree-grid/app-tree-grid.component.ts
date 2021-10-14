@@ -186,7 +186,6 @@ export class AppTreeGridComponent {
       return;
     }
 
-
     const { id } = args.item;
 
     if (id === 'freezing') {
@@ -207,7 +206,6 @@ export class AppTreeGridComponent {
       this.toggleRowToPasteCls(true);
       this.pasteMode = id as PasteMode;
     }
-
 
     if (['paste_above', 'paste_below', 'paste_child'].includes(id) && this.contextMenuRowIndex) {
       const [, position] = id.split('_');
@@ -231,7 +229,11 @@ export class AppTreeGridComponent {
         this.treeGridObj.reorderRows(fromIndexes, this.contextMenuRowIndex, position);
       }
       if (this.pasteMode){
-        this.usersService.movePosition(newItemIds, this.contextMenuRowIndex, position as 'above' | 'below' | 'child', 'Philippines', this.pasteMode).subscribe();
+        const item = this.itemsToPast[0];
+        const country = item?.parentItem?.country;
+
+        if (!country) return;
+        this.usersService.movePosition(newItemIds, this.contextMenuRowIndex, position as 'above' | 'below' | 'child', country, this.pasteMode).subscribe();
       }
       this.toggleRowToPasteCls(false);
       return;
@@ -292,12 +294,14 @@ export class AppTreeGridComponent {
       }
     }
   }
+
   rowSelecting(event: any): void {
     const elem: Element = event.row as Element;
-    if(elem?.getAttribute('aria-expanded')) {
+    if(elem && elem.getAttribute && elem?.getAttribute('aria-expanded')) {
       elem.setAttribute('aria-selected', 'false')
     }
   }
+
   onActionComplete(event: any): void {
     const { type, requestType, data } = event;
     if (requestType === 'delete') {
