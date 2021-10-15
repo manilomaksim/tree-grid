@@ -13,9 +13,12 @@ import { take } from 'rxjs/operators';
 // @ts-ignore
 import { v4 as uuid } from 'uuid';
 
-
 type PasteMode = 'copy' | 'cut' | null;
 
+/* NOTE:
+     The method of adding new row for version
+     "ej2-angular-treegrid" doesn`t working
+*/
 @Component({
   selector: 'app-tree-grid',
   templateUrl: './app-tree-grid.component.html',
